@@ -61,6 +61,19 @@ app.get('/geturls',[authenticate],async function(req,res){
         res.json({error})
     }
 })
+app.delete('/delete/:id',[authenticate],async function(req,res){
+    try {
+        let client = await mongoClient.connect(url)
+        let db = client.db("test2");
+        let data = await db.collection('urls').findOneAndDelete({_id:mongodb.ObjectId(req.params.id),userid:req.userid})
+        await client,close();
+        res.json({
+            message:'url deleted'
+        })
+    } catch (error) {
+        res.json(error)
+    }
+})
 app.get('/:shortid',async function (req,res){
     try {
         let client = await mongoClient.connect(url)
